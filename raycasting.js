@@ -158,6 +158,7 @@ function nearest_wall_distance(map, pos, angle) {
         } // Else wall doesn't intersect raycast line.
     }
     
-    return min_distance_squared;
+    // Returning the squared value will give the player walls that grow very quickly
+    return Math.sqrt(min_distance_squared);
 }
 
