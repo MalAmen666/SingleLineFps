@@ -3,8 +3,8 @@
 /** Object that stores the game state variables. */
 var state = {
 	field_of_view: 80,
-	pos: {x: 3, y: 3},
-	facing: 90,
+	pos: {x: 4.5, y: 1},
+	facing: Math.PI * 0 / 2,
 	// Map is a list of length pair, at least 4, that contain pairs of coordinates x y.
 	// First pair is the starting coordinate, then the following pairs indicate the next coordinate, the final
 	// coordinate connects to the first. Works like an opengl GL_LINE_LOOP.
@@ -44,7 +44,7 @@ var ctx = canvas.getContext('2d');
 function draw() {
 	ctx.fillStyle = "red";
 	ctx.fillRect(10, 10, 30, 30);
-	ctx.fillRect(ctx.canvas.clientWidth - 40, ctx.canvas.clientHeight -40, 30, 30);
+	ctx.fillRect(ctx.canvas.clientWidth - 40, ctx.canvas.clientHeight - 40, 30, 30);
 }
 
 function resize_canvas(){
@@ -54,6 +54,18 @@ function resize_canvas(){
 	draw();
 }
 
+var font = "Arial";
+var fontsizes = new FontSizes(ctx, font);
+canvas.style.height = (fontsizes.line_height * 2) + "px";
+
 resize_canvas();
 window.addEventListener("resize", resize_canvas);
 window.addEventListener("orientationchange", resize_canvas);
+
+
+// DEBUG CODE
+ctx.textBaseline="middle";
+var fontsize = fontsizes.get_fontsize_for_distance(nearest_wall_distance(state.map, state.pos, state.facing));
+ctx.font = fontsize + "px " + font;
+
+ctx.fillText("#", 0, canvas.height / 2);

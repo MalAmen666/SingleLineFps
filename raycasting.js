@@ -113,6 +113,7 @@ function coord_angle_to_line(coord, angle) {
     ];
 }
 
+/** Euclidean distance squared. */
 function point_distance_squared(point1, point2) {
     return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2);
 }
@@ -135,7 +136,9 @@ function nearest_wall_distance(map, pos, angle) {
     /** The minimum distace found yet. NaN if none found. */
     var min_distance_squared = NaN;
     
-    for (var cur_wall_line = 0, wall_line_count = map_wall_lines.length; cur_wall_line < wall_line_count; cur_wall_line++) {
+    for (var cur_wall_line = 0, wall_line_count = map_wall_lines.length;
+         cur_wall_line < wall_line_count;
+         cur_wall_line++) {
         var line_intersection = checkLineIntersection(
             raycast_line[0],
             raycast_line[1],
@@ -157,3 +160,4 @@ function nearest_wall_distance(map, pos, angle) {
     
     return min_distance_squared;
 }
+
