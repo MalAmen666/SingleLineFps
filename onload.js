@@ -29,7 +29,14 @@ var state = {
 			1, 3
 		]
 	],
-    pressedKeys: {},
+    pressedKeys: {
+        strafe_right: false,
+        strafe_left: false,
+        up: false,
+        down: false,
+        left: false,
+        right: false
+    },
     playerSpeed: 1,
     playerTurningSpeed: Math.PI / 2
 };
@@ -55,9 +62,10 @@ function draw() {
     drawWalls(fontClass, state.map, state.pos, state.facing, state.field_of_view);
 }
 
+// Global variables for the 
 var fps_count_yet = 0;
 var fps_time_left = 1000;
-console.log("Console logging on.");
+
 /** Updates the game logic. Receives the delta time, returns if the draw() should be called. */
 function update(progress) {
     if (fps_time_left < 0) {
@@ -82,29 +90,30 @@ function update(progress) {
         console.log("state.facing: " + state.facing);
         refresh = true;
     }
+    var speed;
     if (state.pressedKeys.strafe_left) {
-        var speed = progress / 1000 * state.playerSpeed;
+        speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing - Math.PI / 2) * speed;
         state.pos.y += Math.sin(state.facing - Math.PI / 2) * speed;
         console.log("x, y: " + state.pos.x + ", " + state.pos.y);
         refresh = true;
     }
     if (state.pressedKeys.strafe_right) {
-        var speed = progress / 1000 * state.playerSpeed;
+        speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing + Math.PI / 2) * speed;
         state.pos.y += Math.sin(state.facing + Math.PI / 2) * speed;
         console.log("x, y: " + state.pos.x + ", " + state.pos.y);
         refresh = true;
     }
     if (state.pressedKeys.up) {
-        var speed = progress / 1000 * state.playerSpeed;
+        speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing) * speed;
         state.pos.y += Math.sin(state.facing) * speed;
         console.log("x, y: " + state.pos.x + ", " + state.pos.y);
         refresh = true;
     }
     if (state.pressedKeys.down) {
-        var speed = progress / 1000 * state.playerSpeed;
+        speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing + Math.PI) * speed;
         state.pos.y += Math.sin(state.facing + Math.PI) * speed;
         console.log("x, y: " + state.pos.x + ", " + state.pos.y);
@@ -112,6 +121,8 @@ function update(progress) {
     }
     return refresh;
 }
+
+// GAME LOOP
 
 var lastRender = 0;
 function loop(timestamp) {
@@ -125,6 +136,11 @@ function loop(timestamp) {
 }
 window.requestAnimationFrame(loop);
 
+// END GAME LOOP
+
+// INPUT
+
+/** Maps the possible key codes to their names. */
 var keyMap = {
     68: 'strafe_right',
     65: 'strafe_left',
@@ -132,7 +148,7 @@ var keyMap = {
     83: 'down',
     37: 'left',
     39: 'right'
-}
+};
 function keydown(event) {
     var rawKey = event.keyCode;
     var keyName = keyMap[rawKey];
@@ -144,7 +160,6 @@ function keyup(event) {
     state.pressedKeys[key] = false;
     console.log("Released " + key);
 }
-
 window.addEventListener("keydown", keydown, false);
 window.addEventListener("keyup", keyup, false);
 
@@ -154,6 +169,8 @@ function resize_canvas(){
 	console.log("Window resized to " + window.innerWidth + "x" + window.innerHeight);
 	draw();
 }
+
+// END INPUT
 
 resize_canvas();
 window.addEventListener("resize", resize_canvas);

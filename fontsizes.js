@@ -57,10 +57,15 @@ FontSizes.prototype.get_pixelwidth_for_distance = function (distance) {
         return this.max_pixel_width;
     if (distance >= this.max_distance)
         return this.min_pixel_width;
-    return Math.round(this.max_pixel_width + (distance - this.min_distance) * (this.min_pixel_width - this.max_pixel_width) / (this.max_distance - this.min_distance));
+    var choice = this.max_pixel_width + (distance - this.min_distance) * (this.min_pixel_width - this.max_pixel_width) / (this.max_distance - this.min_distance);
+    var weightedChoice = (choice - this.min_pixel_width) / (this.max_pixel_width - this.min_pixel_width);
+    weightedChoice *= weightedChoice;
+    weightedChoice = (weightedChoice * (this.max_pixel_width - this.min_pixel_width) + this.min_pixel_width);
+    return Math.round(weightedChoice);
 };
 
-/** Translates distance to fontsize. */
+/** Translates distance to fontsize. 
 FontSizes.prototype.get_fontsize_for_distance = function (distance) {
     return this.get_closest(this.get_pixelwidth_for_distance(distance));
 };
+*/
