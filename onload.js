@@ -3,7 +3,7 @@
 /** Object that stores the game state variables. */
 var state = {
     // in radians
-	field_of_view: 60 * Math.PI / 180,
+	field_of_view: 100 * Math.PI / 180,
 	pos: {x: 4, y: 1},
     // radians angle counterclockwise from right
 	facing: Math.PI / 2,
@@ -47,10 +47,30 @@ var canvas = document.getElementById('canvas');
 /** The main canvas context to use for 2d graphics. */
 var ctx = canvas.getContext('2d');
 
-var font = "Arial";
-var fontClass = new Font(ctx, font);
-canvas.style.height = Math.floor(fontClass.font_sizes.line_height * 1) + "px";
+
 // canvas.style.marginTop = Math.floor(-1 * (fontClass.font_sizes.line_height * 1) / 2) + "px";
+var fontClass;
+
+// Change font
+function onFontSelectionChange() {
+    var fontSelectionElement = document.getElementById("fontSelection");
+    var font = fontSelectionElement.options[fontSelectionElement.selectedIndex].text;
+    fontClass = new Font(ctx, font);
+    canvas.style.height = Math.floor(fontClass.font_sizes.line_height * 1) + "px";
+    document.activeElement.blur();
+    draw();
+}
+onFontSelectionChange();
+
+function onFovSliderChange() {
+    var fovSliderElement = document.getElementById("fovSlider");
+    var fov = fovSliderElement.value;
+    document.getElementById("fovSliderFeedback").textContent = fov + "º";
+    state.field_of_view = fov * Math.PI / 180;
+    document.activeElement.blur();
+    draw();
+}
+onFovSliderChange();
 
 /** Draws the game window. */
 function draw() {
