@@ -57,7 +57,7 @@ function onFontSelectionChange() {
     var font = fontSelectionElement.options[fontSelectionElement.selectedIndex].text;
     fontClass = new Font(ctx, font);
     canvas.style.height = Math.floor(fontClass.font_sizes.line_height * 1) + "px";
-    document.activeElement.blur();
+    loseFocus();
     draw();
 }
 onFontSelectionChange();
@@ -67,10 +67,14 @@ function onFovSliderChange() {
     var fov = fovSliderElement.value;
     document.getElementById("fovSliderFeedback").textContent = fov + "º";
     state.field_of_view = fov * Math.PI / 180;
-    document.activeElement.blur();
+    //loseFocus();
     draw();
 }
 onFovSliderChange();
+
+function loseFocus() {
+    document.activeElement.blur();
+}
 
 /** Draws the game window. */
 function draw() {
