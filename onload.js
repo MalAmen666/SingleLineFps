@@ -62,20 +62,12 @@ function draw() {
     drawWalls(fontClass, state.map, state.pos, state.facing, state.field_of_view);
 }
 
-// Global variables for the 
-var fps_count_yet = 0;
-var fps_time_left = 1000;
+/** Class responsible for the update of the FPS counter. */
+var fpsCounter = new FpsCounter(1, document.getElementById('fps_counter'));
 
 /** Updates the game logic. Receives the delta time, returns if the draw() should be called. */
 function update(progress) {
-    if (fps_time_left < 0) {
-        document.getElementById('fps_counter').textContent = "" + fps_count_yet;
-        fps_count_yet = 0;
-        fps_time_left = 1000;
-    } else {
-        fps_count_yet += 1;
-        fps_time_left -= progress;
-    }
+    fpsCounter.count(progress);
     
     var refresh = false;
     
