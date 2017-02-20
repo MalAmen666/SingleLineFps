@@ -3,10 +3,10 @@
 /** Object that stores the game state variables. */
 var state = {
     // in radians
-	field_of_view: 80 * Math.PI / 180,
+	field_of_view: 60 * Math.PI / 180,
 	pos: {x: 4, y: 1},
     // radians angle counterclockwise from right
-	facing: Math.PI * 2 / 2,
+	facing: Math.PI / 2,
     
 	// Map is a list of length pair, at least 4, that contain pairs of coordinates x y.
 	// First pair is the starting coordinate, then the following pairs indicate the next coordinate, the final
@@ -30,12 +30,12 @@ var state = {
 		]
 	],
     pressedKeys: {
-        strafe_right: false,
-        strafe_left: false,
-        up: false,
-        down: false,
-        left: false,
-        right: false
+        strafe_right:   false,
+        strafe_left:    false,
+        up:             false,
+        down:           false,
+        left:           false,
+        right:          false
     },
     playerSpeed: 1,
     playerTurningSpeed: Math.PI / 2
@@ -49,16 +49,14 @@ var ctx = canvas.getContext('2d');
 
 var font = "Arial";
 var fontClass = new Font(ctx, font);
-canvas.style.height = (fontClass.font_sizes.line_height * 2) + "px";
+canvas.style.height = Math.floor(fontClass.font_sizes.line_height * 1) + "px";
+// canvas.style.marginTop = Math.floor(-1 * (fontClass.font_sizes.line_height * 1) / 2) + "px";
 
 /** Draws the game window. */
 function draw() {
-	ctx.fillStyle = "red";
-	ctx.fillRect(10, 10, 30, 30);
-	ctx.fillRect(ctx.canvas.clientWidth - 40, ctx.canvas.clientHeight - 40, 30, 30);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
     drawWalls(fontClass, state.map, state.pos, state.facing, state.field_of_view);
 }
 
@@ -74,12 +72,10 @@ function update(progress) {
     // Check player input
     if (state.pressedKeys.left) {
         state.facing -= progress / 1000 * state.playerTurningSpeed;
-        console.log("facing: " + state.facing);
         refresh = true;
     }
     if (state.pressedKeys.right) {
         state.facing += progress / 1000 * state.playerTurningSpeed;
-        console.log("state.facing: " + state.facing);
         refresh = true;
     }
     var speed;
@@ -87,28 +83,24 @@ function update(progress) {
         speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing - Math.PI / 2) * speed;
         state.pos.y += Math.sin(state.facing - Math.PI / 2) * speed;
-        console.log("x, y: " + state.pos.x + ", " + state.pos.y);
         refresh = true;
     }
     if (state.pressedKeys.strafe_right) {
         speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing + Math.PI / 2) * speed;
         state.pos.y += Math.sin(state.facing + Math.PI / 2) * speed;
-        console.log("x, y: " + state.pos.x + ", " + state.pos.y);
         refresh = true;
     }
     if (state.pressedKeys.up) {
         speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing) * speed;
         state.pos.y += Math.sin(state.facing) * speed;
-        console.log("x, y: " + state.pos.x + ", " + state.pos.y);
         refresh = true;
     }
     if (state.pressedKeys.down) {
         speed = progress / 1000 * state.playerSpeed;
         state.pos.x += Math.cos(state.facing + Math.PI) * speed;
         state.pos.y += Math.sin(state.facing + Math.PI) * speed;
-        console.log("x, y: " + state.pos.x + ", " + state.pos.y);
         refresh = true;
     }
     return refresh;
@@ -119,10 +111,10 @@ function update(progress) {
 var lastRender = 0;
 function loop(timestamp) {
     var progress = timestamp - lastRender;
-
+    
     if (update(progress))
         draw();
-
+    
     lastRender = timestamp;
     window.requestAnimationFrame(loop);
 }

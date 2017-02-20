@@ -1,7 +1,7 @@
 /** Class that tracks font size and provides a way to transform distances to a font size. */
 function FontSizes(canvas_context, font, min_font_size, max_font_size) {
     if (typeof(min_font_size)==='undefined') min_font_size = 4;
-    if (typeof(max_font_size)==='undefined') max_font_size = 300;
+    if (typeof(max_font_size)==='undefined') max_font_size = 400;
 
     // The minimum and maximum pixel sizes, for use in distance-fontsize translations.
     this.min_pixel_width = undefined;
