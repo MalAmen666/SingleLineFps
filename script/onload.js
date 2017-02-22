@@ -4,31 +4,33 @@
 var state = {
     // in radians
 	field_of_view: 100 * Math.PI / 180,
-	pos: {x: 4, y: 1},
+	pos: new Point(4, 1),
     // radians angle counterclockwise from right
 	facing: Math.PI / 2,
     
 	// Map is a list of length pair, at least 4, that contain pairs of coordinates x y.
 	// First pair is the starting coordinate, then the following pairs indicate the next coordinate, the final
 	// coordinate connects to the first. Works like an opengl GL_LINE_LOOP.
-	map: [
-		[
-			1, 0,
-			5, 0,
-			5, 3,
-			3, 3,
-			3, 4,
-			0, 4,
-			0, 1,
-			1, 1
-		],
+	map: new Map([
+	    new Polygon(
+        [
+            1, 0,
+            5, 0,
+            5, 3,
+            3, 3,
+            3, 4,
+            0, 4,
+            0, 1,
+            1, 1
+        ]),
+        new Polygon(
 		[
 			1, 2,
 			2, 2,
 			2, 3,
 			1, 3
-		]
-	],
+		])
+	]),
     pressedKeys: {
         strafe_right:   false,
         strafe_left:    false,

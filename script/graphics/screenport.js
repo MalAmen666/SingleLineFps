@@ -5,6 +5,13 @@ function pixelsToAngle(pixels, viewport_width, fov) {
     return -1 * fov / 2 + pixels * (fov / 2 - (-1 * fov / 2)) / (viewport_width);
 }
 
+/**
+ * @param font {Font}
+ * @param map {Map}
+ * @param pos {Point}
+ * @param angle {Number}
+ * @param fov {Number}
+ */
 function drawWalls(font, map, pos, angle, fov) {
     var spacing = 5;
     
@@ -13,7 +20,7 @@ function drawWalls(font, map, pos, angle, fov) {
     font.context.textBaseline="middle";
     
     // Draw center wall
-    var distance = nearest_wall_distance(map, pos, angle);
+    var distance = map.nearestWallDistance(pos, angle);
     var initialCharWidth = font.setFontSizeForDistance(distance);
     font.context.fillText("#", width / 2 - initialCharWidth / 2, height / 2);
     var deltaAngle, charWidth;
@@ -22,7 +29,7 @@ function drawWalls(font, map, pos, angle, fov) {
     var rightPosition = width / 2 + initialCharWidth / 2 + spacing;
     while (rightPosition < width) {
         deltaAngle = pixelsToAngle(rightPosition, width, fov);
-        distance = nearest_wall_distance(map, pos, angle + deltaAngle);
+        distance = map.nearestWallDistance(pos, angle + deltaAngle);
         charWidth = font.setFontSizeForDistance(distance);
         font.context.fillText("#", rightPosition, height / 2);
         rightPosition += charWidth + spacing;
@@ -32,7 +39,7 @@ function drawWalls(font, map, pos, angle, fov) {
     var leftPosition = width / 2 - initialCharWidth / 2;
     while (leftPosition >= 0) {
         deltaAngle = pixelsToAngle(leftPosition, width, fov);
-        distance = nearest_wall_distance(map, pos, angle + deltaAngle);
+        distance = map.nearestWallDistance(pos, angle + deltaAngle);
         charWidth = font.setFontSizeForDistance(distance);
         font.context.fillText("#", leftPosition - charWidth - spacing, height / 2);
         leftPosition -= charWidth + spacing;

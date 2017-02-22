@@ -5,6 +5,7 @@
  */
 var RAYCASTING_MAX_RAY_DISTANCE = 10;
 
+/*
 // http://jsfiddle.net/justin_c_rounds/Gd2S2/light/
 function checkLineIntersection(line1StartX, line1StartY, line1EndX, line1EndY, line2StartX, line2StartY, line2EndX, line2EndY) {
     // if the lines intersect, the result contains the x and y of the intersection (treating the lines as infinite) and
@@ -33,7 +34,7 @@ function checkLineIntersection(line1StartX, line1StartY, line1EndX, line1EndY, l
         // it is worth noting that this should be the same as:
         x = line2StartX + (b * (line2EndX - line2StartX));
         y = line2StartX + (b * (line2EndY - line2StartY));
-    */
+    *
     
     // if line1 is a segment and line2 is infinite, they intersect if:
     if (a > 0 && a < 1) {
@@ -46,6 +47,7 @@ function checkLineIntersection(line1StartX, line1StartY, line1EndX, line1EndY, l
     // if line1 and line2 are segments, they intersect if both of the above are true
     return result;
 }
+*/
 
 /**
  * Gets all the lines represented by the map.
@@ -53,7 +55,7 @@ function checkLineIntersection(line1StartX, line1StartY, line1EndX, line1EndY, l
  * Assumes that the length of each map item is pair and at least four.
  *
  * @param {Array} map A list of lists containing pairs of x, y.
- * @return {Array} A list of lines in the format [x0, y0, x1, y1].
+ * @return {Array} A list of lines.
  */
 function get_map_lines(map) {
     
@@ -100,65 +102,45 @@ function get_map_lines(map) {
 }
 
 /**
- * 
- * @param coord The initial coordinate position.
- * @param angle In radians, starting from directly right.
- */
-function coord_angle_to_line(coord, angle) {
-    return [
-        coord.x,
-        coord.y,
-        coord.x + RAYCASTING_MAX_RAY_DISTANCE * Math.cos(angle),
-        coord.y + RAYCASTING_MAX_RAY_DISTANCE * Math.sin(angle)
-    ];
-}
-
-/** Euclidean distance squared. */
-function point_distance_squared(point1, point2) {
-    return Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2);
-}
-
-/**
  * Gets the shortest distance from a point to a wall in a certain direction.
  * 
- * @param map {Array} The map to check.
- * @param pos {object} The position to start the check from.
+ * @param map {Map} The map to check.
+ * @param pos {Point} The position to start the check from.
  * @param angle {Number} The angle to check the nearest wall. Starts from the right, counter clockwise.
  * @return {Number} The distance to the nearest wall, or NaN if none found.
  */
-function nearest_wall_distance(map, pos, angle) {
-    /** The line that will be used for testing. */
-    var raycast_line = coord_angle_to_line(pos, angle);
-    
-    /** List of all lines that compose the map. */
-    var map_wall_lines = get_map_lines(map);
-    
-    /** The minimum distace found yet. NaN if none found. */
-    var min_distance_squared = NaN;
-    
-    for (var cur_wall_line = 0, wall_line_count = map_wall_lines.length;
-         cur_wall_line < wall_line_count;
-         cur_wall_line++) {
-        var line_intersection = checkLineIntersection(
-            raycast_line[0],
-            raycast_line[1],
-            raycast_line[2],
-            raycast_line[3],
-            map_wall_lines[cur_wall_line][0],
-            map_wall_lines[cur_wall_line][1],
-            map_wall_lines[cur_wall_line][2],
-            map_wall_lines[cur_wall_line][3]
-        );
-        if (line_intersection.onLine1 && line_intersection.onLine2) {
-            if (isNaN(min_distance_squared)) {
-                min_distance_squared = point_distance_squared(pos, line_intersection);
-            } else {
-                min_distance_squared = Math.min(min_distance_squared, point_distance_squared(pos, line_intersection));
-            }
-        } // Else wall doesn't intersect raycast line.
-    }
-    
-    // Returning the squared value will give the player walls that grow very quickly
-    return Math.sqrt(min_distance_squared);
-}
-
+// function nearest_wall_distance(map, pos, angle) {
+//     /** The line that will be used for testing. */
+//     var raycast_line = coord_angle_to_line(pos, angle);
+//    
+//     /** List of all lines that compose the map. */
+//     var map_wall_lines = get_map_lines(map);
+//    
+//     /** The minimum distace found yet. NaN if none found. */
+//     var min_distance_squared = NaN;
+//    
+//     for (var cur_wall_line = 0, wall_line_count = map_wall_lines.length;
+//          cur_wall_line < wall_line_count;
+//          cur_wall_line++) {
+//         var line_intersection = checkLineIntersection(
+//             raycast_line[0],
+//             raycast_line[1],
+//             raycast_line[2],
+//             raycast_line[3],
+//             map_wall_lines[cur_wall_line][0],
+//             map_wall_lines[cur_wall_line][1],
+//             map_wall_lines[cur_wall_line][2],
+//             map_wall_lines[cur_wall_line][3]
+//         );
+//         if (line_intersection.onLine1 && line_intersection.onLine2) {
+//             if (isNaN(min_distance_squared)) {
+//                 min_distance_squared = point_distance_squared(pos, line_intersection);
+//             } else {
+//                 min_distance_squared = Math.min(min_distance_squared, point_distance_squared(pos, line_intersection));
+//             }
+//         } // Else wall doesn't intersect raycast line.
+//     }
+//    
+//     // Returning the squared value will give the player walls that grow very quickly
+//     return Math.sqrt(min_distance_squared);
+// }
