@@ -48,3 +48,11 @@ Point.prototype.distanceTo = function (otherPoint) {
 Point.prototype.squaredDistanceTo = function (otherPoint) {
     return Math.pow(this.x - otherPoint.x, 2) + Math.pow(this.y - otherPoint.y, 2);
 };
+
+Point.prototype.newAdd = function (otherPoint) {
+    return new Point(this.x + otherPoint.x, this.y + otherPoint.y);
+};
+
+Point.prototype.toString = function () {
+    return "Point(" + this.x + ", " + this.y + ")";
+};

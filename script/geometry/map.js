@@ -49,3 +49,11 @@ Map.prototype.nearestWallDistance = function (pos, angle) {
     
     return Math.sqrt(min_distance_squared);
 };
+
+Map.prototype.getWallsThatCollideWith = function(polygon) {
+    var collisionWalls = [];
+    for (var polygonIndex = 0, polygonCount = this.polygonList.length; polygonIndex < polygonCount; polygonIndex++) {
+        collisionWalls = collisionWalls.concat(this.polygonList[polygonIndex].getLinesThatCollideWithPolygon(polygon));
+    }
+    return collisionWalls;
+};

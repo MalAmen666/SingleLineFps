@@ -88,3 +88,7 @@ Line.prototype.intersects = function (otherLine) {
 
     return (a > 0 && a < 1) && (b > 0 && b < 1);
 };
+
+Line.prototype.toString = function () {
+    return "Line(" + this.x0 + ", " + this.y0 + ", " + this.x1 + ", " + this.y1 + ")";
+};

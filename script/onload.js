@@ -5,8 +5,17 @@ var state = {
     // in radians
 	field_of_view: 100 * Math.PI / 180,
 	pos: new Point(4, 1),
+    playerSpeed: 1,
+    playerTurningSpeed: Math.PI / 2,
+    
+    // The angle of where the player is going
+    playerMomentum: 0,
+    
     // radians angle counterclockwise from right
 	facing: Math.PI / 2,
+    
+    // The size of the bounding box used for collisions
+    boundingBoxSize: 0.5,
     
 	// Map is a list of length pair, at least 4, that contain pairs of coordinates x y.
 	// First pair is the starting coordinate, then the following pairs indicate the next coordinate, the final
@@ -38,9 +47,7 @@ var state = {
         down:           false,
         left:           false,
         right:          false
-    },
-    playerSpeed: 1,
-    playerTurningSpeed: Math.PI / 2
+    }
 };
 
 /** The main canvas where the game is drawn on. */
@@ -94,8 +101,42 @@ function update(progress) {
     fpsCounter.count(progress);
     
     var refresh = false;
+    var movement = false;
     
-    // Check player input
+    if (state.pressedKeys.up && !state.pressedKeys.down && !state.pressedKeys.strafe_left && !state.pressedKeys.strafe_right) {
+        // UP (8)
+        state.playerMomentum = state.facing;
+        movement = true;
+    } else if (state.pressedKeys.up && !state.pressedKeys.down && state.pressedKeys.strafe_left && !state.pressedKeys.strafe_right) {
+        // UP LEFT (7)
+        state.playerMomentum = state.facing - Math.PI / 4;
+        movement = true;
+    } else if (state.pressedKeys.up && !state.pressedKeys.down && !state.pressedKeys.strafe_left && state.pressedKeys.strafe_right) {
+        // UP RIGHT (9)
+        state.playerMomentum = state.facing + Math.PI / 4;
+        movement = true;
+    } else if (!state.pressedKeys.up && !state.pressedKeys.down && state.pressedKeys.strafe_left && !state.pressedKeys.strafe_right) {
+        // LEFT (4)
+        state.playerMomentum = state.facing - Math.PI / 2;
+        movement = true;
+    } else if (!state.pressedKeys.up && !state.pressedKeys.down && !state.pressedKeys.strafe_left && state.pressedKeys.strafe_right) {
+        // RIGHT (6)
+        state.playerMomentum = state.facing + Math.PI / 2;
+        movement = true;
+    } else if (!state.pressedKeys.up && state.pressedKeys.down && state.pressedKeys.strafe_left && !state.pressedKeys.strafe_right) {
+        // DOWN LEFT (1)
+        state.playerMomentum = state.facing - Math.PI * 3 / 4;
+        movement = true;
+    } else if (!state.pressedKeys.up && state.pressedKeys.down && !state.pressedKeys.strafe_left && state.pressedKeys.strafe_right) {
+        // DOWN RIGHT (3)
+        state.playerMomentum = state.facing + Math.PI * 3 / 4;
+        movement = true;
+    } else if (!state.pressedKeys.up && state.pressedKeys.down && !state.pressedKeys.strafe_left && !state.pressedKeys.strafe_right) {
+        // DOWN (2)
+        state.playerMomentum = state.facing + Math.PI;
+        movement = true;
+    }
+
     if (state.pressedKeys.left) {
         state.facing -= progress / 1000 * state.playerTurningSpeed;
         refresh = true;
@@ -104,32 +145,42 @@ function update(progress) {
         state.facing += progress / 1000 * state.playerTurningSpeed;
         refresh = true;
     }
-    var speed;
-    if (state.pressedKeys.strafe_left) {
-        speed = progress / 1000 * state.playerSpeed;
-        state.pos.x += Math.cos(state.facing - Math.PI / 2) * speed;
-        state.pos.y += Math.sin(state.facing - Math.PI / 2) * speed;
-        refresh = true;
+    
+    if (movement) {
+        
+        var speed = new Point(
+            Math.cos(state.playerMomentum) * state.playerSpeed * progress / 1000,
+            Math.sin(state.playerMomentum) * state.playerSpeed * progress / 1000
+        );
+        console.log("Speed: " + speed);
+        var done = false;
+        while (!done) {
+            var newPos = state.pos.newAdd(speed);
+
+            var boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize);
+
+            if (!state.map.collidesWith(boundingBox)) {
+                state.pos = newPos;
+                done = true;
+            } else {
+                var collidingWalls = state.map.getWallsThatCollideWith(boundingBox);
+                for (var collidingWallIndex = 0, collidingWallCount = collidingWalls.length; collidingWallIndex < collidingWallCount; collidingWallIndex++) {
+                    console.log("Collides with " + collidingWalls[collidingWallIndex]);
+                    console.log("Deflection: " + deflection(speed, collidingWalls[collidingWallIndex]));
+                    speed = deflection(speed, collidingWalls[collidingWallIndex]);
+                }
+                console.log("Colliding with " + state.map.getWallsThatCollideWith(boundingBox) + ".\n");
+            }
+        }
+        
+        /*
+        state.pos.x += Math.cos(state.playerMomentum) * state.playerSpeed * progress / 1000;
+        state.pos.y += Math.sin(state.playerMomentum) * state.playerSpeed * progress / 1000;
+        */
+        return true;
+    } else {
+        return refresh;
     }
-    if (state.pressedKeys.strafe_right) {
-        speed = progress / 1000 * state.playerSpeed;
-        state.pos.x += Math.cos(state.facing + Math.PI / 2) * speed;
-        state.pos.y += Math.sin(state.facing + Math.PI / 2) * speed;
-        refresh = true;
-    }
-    if (state.pressedKeys.up) {
-        speed = progress / 1000 * state.playerSpeed;
-        state.pos.x += Math.cos(state.facing) * speed;
-        state.pos.y += Math.sin(state.facing) * speed;
-        refresh = true;
-    }
-    if (state.pressedKeys.down) {
-        speed = progress / 1000 * state.playerSpeed;
-        state.pos.x += Math.cos(state.facing + Math.PI) * speed;
-        state.pos.y += Math.sin(state.facing + Math.PI) * speed;
-        refresh = true;
-    }
-    return refresh;
 }
 
 // GAME LOOP

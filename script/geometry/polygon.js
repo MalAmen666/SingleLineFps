@@ -51,10 +51,50 @@ Polygon.prototype.collidesWithLine = function (line) {
  */
 Polygon.prototype.collidesWithPolygon = function (polygon) {
     for (var lineIndex = 0, lineCount = this.lines.length; lineIndex < lineCount; lineIndex++) {
-        for (var polygonLineIndex = 0, polygonLineCount = this.lines.length; polygonLineIndex < polygonLineCount; polygonLineIndex++) {
+        for (var polygonLineIndex = 0, polygonLineCount = polygon.lines.length; polygonLineIndex < polygonLineCount; polygonLineIndex++) {
             if (polygon.lines[polygonLineIndex].intersects(this.lines[lineIndex]))
                 return true;
         }
     }
     return false;
+};
+
+Polygon.prototype.getLinesThatCollideWithPolygon = function (polygon) {
+    var result = [];
+    for (var lineIndex = 0, lineCount = this.lines.length; lineIndex < lineCount; lineIndex++) {
+        for (var polygonLineIndex = 0, polygonLineCount = polygon.lines.length; polygonLineIndex < polygonLineCount; polygonLineIndex++) {
+            if (polygon.lines[polygonLineIndex].intersects(this.lines[lineIndex])) {
+                result.push(this.lines[lineIndex]);
+                break; // The wall being verified is already noted, move on to the next wall
+            }
+        }
+    }
+    return result;
+};
+
+/**
+ * @param p1 {Point}
+ * @param p2 {Point}
+ */
+Polygon.makeRectangleFromPoints = function (p1, p2) {
+    return Polygon.makeRectangleFromNums(p1.x, p1.y, p2.x, p2.y);
+};
+
+Polygon.makeRectangleFromNums = function (x0, y0, x1, y1) {
+    return new Polygon([
+        x0, y0,
+        x1, y0,
+        x1, y1,
+        x0, y1
+    ])
+};
+
+Polygon.makeRectangleFromCenterAndWidths = function (center, horizontalWidth, verticalWidth) {
+    if (verticalWidth === undefined) verticalWidth = horizontalWidth;
+    return Polygon.makeRectangleFromNums(
+        center.x - horizontalWidth / 2,
+        center.y - verticalWidth / 2,
+        center.x + horizontalWidth / 2,
+        center.y + verticalWidth / 2
+    )
 };
