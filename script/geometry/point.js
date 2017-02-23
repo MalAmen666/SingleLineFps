@@ -56,3 +56,31 @@ Point.prototype.newAdd = function (otherPoint) {
 Point.prototype.toString = function () {
     return "Point(" + this.x + ", " + this.y + ")";
 };
+
+Point.prototype.dotProduct = function (otherPoint) {
+    return this.x * otherPoint.x + this.y * otherPoint.y;
+};
+
+Point.prototype.lengthSquared = function () {
+    return Math.pow(this.x, 2) + Math.pow(this.y, 2);
+};
+
+Point.prototype.length = function () {
+    return Math.sqrt(this.lengthSquared());
+};
+
+Point.prototype.projectOnto = function (projectee) {
+    return projectee.newMult(this.dotProduct(projectee) / projectee.lengthSquared());
+};
+
+Point.prototype.newMult = function (scalar) {
+    return new Point(this.x * scalar, this.y * scalar);
+};
+
+Point.prototype.round = function (numberDigits) {
+    if (numberDigits === undefined) numberDigits = 3;
+    var factor = Math.pow(10, numberDigits);
+    this.x = Math.round(this.x * factor) / factor;
+    this.y = Math.round(this.y * factor) / factor;
+    return this;
+};

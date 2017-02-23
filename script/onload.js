@@ -151,32 +151,34 @@ function update(progress) {
         var speed = new Point(
             Math.cos(state.playerMomentum) * state.playerSpeed * progress / 1000,
             Math.sin(state.playerMomentum) * state.playerSpeed * progress / 1000
-        );
+        ).round();
         console.log("Speed: " + speed);
-        var done = false;
-        while (!done) {
-            var newPos = state.pos.newAdd(speed);
+        
+        var newPos = state.pos.newAdd(speed);
+        var boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize);
 
-            var boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize);
+        if (!state.map.collidesWith(boundingBox)) {
+            state.pos = newPos;
+        } else {
+            var collidingWall = state.map.getWallsThatCollideWith(boundingBox)[0];
+            console.log("Colliding with " + collidingWall + ".");
+            speed = speed.projectOnto(collidingWall.toPoint()).round();
 
-            if (!state.map.collidesWith(boundingBox)) {
-                state.pos = newPos;
-                done = true;
-            } else {
-                var collidingWalls = state.map.getWallsThatCollideWith(boundingBox);
-                for (var collidingWallIndex = 0, collidingWallCount = collidingWalls.length; collidingWallIndex < collidingWallCount; collidingWallIndex++) {
-                    console.log("Collides with " + collidingWalls[collidingWallIndex]);
-                    console.log("Deflection: " + deflection(speed, collidingWalls[collidingWallIndex]));
-                    speed = deflection(speed, collidingWalls[collidingWallIndex]);
+            newPos = state.pos.newAdd(speed);
+            boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize * 0.5);
+            
+            if (state.map.collidesWith(boundingBox)) {
+                var newCollidingWall = state.map.getWallsThatCollideWith(boundingBox);
+                console.log("Attempted to deflect, there is still collision with " + newCollidingWall + ".");
+                if (newCollidingWall[0].equals(collidingWall)) {
+                    console.log("Collision with same wall.");
                 }
-                console.log("Colliding with " + state.map.getWallsThatCollideWith(boundingBox) + ".\n");
+            } else {
+                console.log("Deflection successful.");
+                state.pos = newPos;
             }
         }
         
-        /*
-        state.pos.x += Math.cos(state.playerMomentum) * state.playerSpeed * progress / 1000;
-        state.pos.y += Math.sin(state.playerMomentum) * state.playerSpeed * progress / 1000;
-        */
         return true;
     } else {
         return refresh;

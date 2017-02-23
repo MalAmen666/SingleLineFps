@@ -92,3 +92,12 @@ Line.prototype.intersects = function (otherLine) {
 Line.prototype.toString = function () {
     return "Line(" + this.x0 + ", " + this.y0 + ", " + this.x1 + ", " + this.y1 + ")";
 };
+
+Line.prototype.toPoint = function () {
+    return new Point(this.x1 - this.x0, this.y1 - this.y0);
+};
+
+Line.prototype.equals = function (other) {
+    return this.x0 == other.x0 && this.y0 == other.y0 && this.x1 == other.x1 && this.y1 == other.y1;
+};
+
