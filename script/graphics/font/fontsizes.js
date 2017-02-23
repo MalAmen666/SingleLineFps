@@ -41,12 +41,12 @@ FontSizes.prototype.get_closest = function (pixel_size) {
 /** Defines the maximum and minimum distances for the get_pixelwidth_for_distance method to use. */
 FontSizes.prototype.set_distances = function (min_distance, max_distance) {
     if (typeof(min_distance)==='undefined')
-        this.min_distance = 0.5;
+        this.min_distance = 5;
     else
         this.min_distance = min_distance;
 
     if (typeof(max_distance)==='undefined')
-        this.max_distance = 5;
+        this.max_distance = 50;
     else
         this.max_distance = max_distance;
 };

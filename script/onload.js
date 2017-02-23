@@ -4,8 +4,8 @@
 var state = {
     // in radians
 	field_of_view: 100 * Math.PI / 180,
-	pos: new Point(4, 1),
-    playerSpeed: 1,
+	pos: new Point(40, 10),
+    playerSpeed: 10,
     playerTurningSpeed: Math.PI / 2,
     
     // The angle of where the player is going
@@ -15,7 +15,7 @@ var state = {
 	facing: Math.PI / 2,
     
     // The size of the bounding box used for collisions
-    boundingBoxSize: 0.5,
+    boundingBoxSize: 5,
     
 	// Map is a list of length pair, at least 4, that contain pairs of coordinates x y.
 	// First pair is the starting coordinate, then the following pairs indicate the next coordinate, the final
@@ -23,21 +23,21 @@ var state = {
 	map: new Map([
 	    new Polygon(
         [
-            1, 0,
-            5, 0,
-            5, 3,
-            3, 3,
-            3, 4,
-            0, 4,
-            0, 1,
-            1, 1
+            10, 0,
+            50, 0,
+            50, 30,
+            30, 30,
+            30, 40,
+            0, 40,
+            0, 10,
+            10, 10
         ]),
         new Polygon(
 		[
-			1, 2,
-			2, 2,
-			2, 3,
-			1, 3
+			10, 20,
+			20, 20,
+			20, 30,
+			10, 30
 		])
 	]),
     pressedKeys: {
@@ -153,10 +153,11 @@ function update(progress) {
             Math.sin(state.playerMomentum) * state.playerSpeed * progress / 1000
         ).round();
         console.log("Speed: " + speed);
-        
-        var newPos = state.pos.newAdd(speed);
-        var boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize);
 
+        var newPos = state.pos.newAdd(speed).round(2);
+        var boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize);
+        console.log("Bounding box: " + boundingBox.lines[0].x0 + ":" + boundingBox.lines[2].x0 + ", " + boundingBox.lines[0].y0 + ":" + boundingBox.lines[2].y0);
+        
         if (!state.map.collidesWith(boundingBox)) {
             state.pos = newPos;
         } else {
@@ -165,7 +166,8 @@ function update(progress) {
             speed = speed.projectOnto(collidingWall.toPoint()).round();
 
             newPos = state.pos.newAdd(speed);
-            boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize * 0.5);
+            boundingBox = Polygon.makeRectangleFromCenterAndWidths(newPos, state.boundingBoxSize);
+            console.log("New bounding box: " + boundingBox.lines[0].x0 + ":" + boundingBox.lines[2].x0 + ", " + boundingBox.lines[0].y0 + ":" + boundingBox.lines[2].y0);
             
             if (state.map.collidesWith(boundingBox)) {
                 var newCollidingWall = state.map.getWallsThatCollideWith(boundingBox);
@@ -178,6 +180,11 @@ function update(progress) {
                 state.pos = newPos;
             }
         }
+
+        state.pos.round(2);
+        
+        document.getElementById("x").textContent = state.pos.x;
+        document.getElementById("y").textContent = state.pos.y;
         
         return true;
     } else {

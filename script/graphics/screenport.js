@@ -22,6 +22,7 @@ function drawWalls(font, map, pos, angle, fov) {
     // Draw center wall
     var distance = map.nearestWallDistance(pos, angle);
     var initialCharWidth = font.setFontSizeForDistance(distance);
+    font.setFontColorForDistance(distance);
     font.context.fillText("#", width / 2 - initialCharWidth / 2, height / 2);
     var deltaAngle, charWidth;
     
@@ -31,6 +32,7 @@ function drawWalls(font, map, pos, angle, fov) {
         deltaAngle = pixelsToAngle(rightPosition, width, fov);
         distance = map.nearestWallDistance(pos, angle + deltaAngle);
         charWidth = font.setFontSizeForDistance(distance);
+        font.setFontColorForDistance(distance);
         font.context.fillText("#", rightPosition, height / 2);
         rightPosition += charWidth + spacing;
     }
@@ -41,6 +43,7 @@ function drawWalls(font, map, pos, angle, fov) {
         deltaAngle = pixelsToAngle(leftPosition, width, fov);
         distance = map.nearestWallDistance(pos, angle + deltaAngle);
         charWidth = font.setFontSizeForDistance(distance);
+        font.setFontColorForDistance(distance);
         font.context.fillText("#", leftPosition - charWidth - spacing, height / 2);
         leftPosition -= charWidth + spacing;
     }

@@ -40,6 +40,7 @@ Polygon.prototype.collidesWith = function (o) {
 Polygon.prototype.collidesWithLine = function (line) {
     for (var lineIndex = 0, lineCount = this.lines.length; lineIndex < lineCount; lineIndex++) {
         if (line.intersects(this.lines[lineIndex]))
+            console.log("COLLISION: " + line + " WITH " + this.lines[lineIndex]);
             return true;
     }
     return false;

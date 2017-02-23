@@ -3,7 +3,7 @@
  * raycasting has to be big enough for a collision with a wall to know for sure that the collided wall is in front of
  * the line.
  */
-var RAYCASTING_MAX_RAY_DISTANCE = 10;
+var RAYCASTING_MAX_RAY_DISTANCE = 100;
 
 /**
  * Gets all the lines represented by the map.

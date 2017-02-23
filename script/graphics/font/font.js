@@ -19,3 +19,15 @@ Font.prototype.setFontSizeForDistance = function (distance) {
     this.setFontSize(fontSize);
     return fontWidthAtDistance;
 };
+
+/** Sets the apropriate fontsize for the given distance and returns the width of the fontsize. */
+Font.prototype.setFontColorForDistance = function (distance) {
+    if (distance <= this.font_sizes.min_distance)
+        return 1;
+    if (distance >= this.font_sizes.max_distance)
+        return 0;
+    var weightedChoice = 1 + (distance - this.font_sizes.min_distance) * (0 - 1) / (this.font_sizes.max_distance - this.font_sizes.min_distance);
+    weightedChoice *= weightedChoice;
+    
+    this.context.fillStyle = "rgb(" + Math.round(255 * weightedChoice) + ", " + Math.round(255 * weightedChoice) + ", " + Math.round(255 * weightedChoice) + ")";
+};
