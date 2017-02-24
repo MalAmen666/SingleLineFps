@@ -8,12 +8,12 @@ Idea from [Three Hundred Game Mechanics #171 - One Line ASCII FPS](http://www.sq
 
 ## Components
 This project has the following distinct parts:
-* [Map](#Map)
-* [Raycasting](#Raycasting)
-* [Font managing](#Font-managing)
-* [Collision detection](#Collision-detection)
-* [Sliding](#Sliding)
-* [FPS counter](#FPS-counter)
+* [Map](#map)
+* [Raycasting](#raycasting)
+* [Font managing](#font-managing)
+* [Collision detection](#collision-detection)
+* [Sliding](#sliding)
+* [FPS counter](#fps-counter)
 
 ### Map
 The map used is represented by a list of polygons, which allowed for easy line collision detection by looping through the polygon's lines.
