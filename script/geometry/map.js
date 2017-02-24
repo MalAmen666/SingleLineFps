@@ -1,4 +1,11 @@
 /**
+ * Because the algorithm for line intersection cannot distinguish between front and back of a line, the line used for
+ * raycasting has to be big enough for a collision with a wall to know for sure that the collided wall is in front of
+ * the line.
+ */
+var RAYCASTING_MAX_RAY_DISTANCE = 100;
+
+/**
  * Represents a map.
  * A map is a collection of one or more polygons.
  * @param polygonList {Array}

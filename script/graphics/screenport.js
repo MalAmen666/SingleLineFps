@@ -1,5 +1,3 @@
-// Requires raycasting.js
-
 /** Translate pixels to angle. */
 function pixelsToAngle(pixels, viewport_width, fov) {
     return -1 * fov / 2 + pixels * (fov / 2 - (-1 * fov / 2)) / (viewport_width);

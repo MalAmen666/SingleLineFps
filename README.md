@@ -15,9 +15,7 @@ Path | Description
 [index.htm](index.htm) | The only html page that loads the javascript libraries and defines the elements used for debugging (like font selection and FPS counter).
 [map_preview.png](map_preview.png) | A untidy representation of the map in use, usefull for figuring manually where a set of coordinates is supposed to be located.
 [style.css](style.css) | The style used to center the canvas vertically. Other trivial styles embedded directly on the HTML.
-[script/collisions.js](script/collisions.js) | **(Obsolete)** The previous algorithm used for sliding.
 [script/onload.js](script/onload.js) | The main script that uses all the other methods and classes to produce the final result. This is where the [game's variables](script/onload.js#L4), [game loop](script/onload.js#L195) and [input processing](script/onload.js#L211) is implemented.
-[script/raycasting.js](script/raycasting.js) | **(Obsolete)** Used to contain the previous algorithms for raycasting, now needs to be deleted.
 [script/geometry/line.js](script/geometry/line.js) | The class that represents a line.
 [script/geometry/map.js](script/geometry/map.js) | The class that represents a map.
 [script/geometry/point.js](script/geometry/point.js) | The class that represents a point / vector.
